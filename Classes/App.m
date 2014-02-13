@@ -9,9 +9,12 @@ NSString *defaultPath = @"/Applications/Sublime Text 2.app/Contents/SharedSuppor
 -(void)awakeFromNib {
     NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
     path = [d objectForKey:@"path"];
+    version = [d objectForKey:@"version"];
     
     NSAppleEventManager *appleEventManager = [NSAppleEventManager sharedAppleEventManager];
     [appleEventManager setEventHandler:self andSelector:@selector(handleGetURLEvent:withReplyEvent:) forEventClass:kInternetEventClass andEventID:kAEGetURL];
+    
+    [self populatePopUp];
 }
 
 -(void)handleGetURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent {
@@ -39,7 +42,7 @@ NSString *defaultPath = @"/Applications/Sublime Text 2.app/Contents/SharedSuppor
             [task launch];
             [task release];
             NSWorkspace *sharedWorkspace = [NSWorkspace sharedWorkspace];
-            NSString *appPath = [sharedWorkspace fullPathForApplication:@"Sublime Text 2"];
+            NSString *appPath = [sharedWorkspace fullPathForApplication:[self applicationBundleName]];
             NSString *identifier = [[NSBundle bundleWithPath:appPath] bundleIdentifier];
             NSArray *selectedApps =
             [NSRunningApplication runningApplicationsWithBundleIdentifier:identifier];
@@ -54,21 +57,50 @@ NSString *defaultPath = @"/Applications/Sublime Text 2.app/Contents/SharedSuppor
     //    }
 }
 
+-(void)populatePopUp {
+    [versionSelector removeAllItems];
+    [versionSelector addItemsWithTitles:[NSArray arrayWithObjects:@"Sublime Text 2", @"Sublime Text 3", nil]];
+}
+
+-(NSString *)applicationBundleName {
+    NSString* appName;
+    
+    if (version == nil) {
+        appName = @"Sublime Text 2";
+    } else if ([version  isEqual: @"Sublime Text 3"]) {
+        appName = @"Sublime Text";
+    } else {
+        appName = version;
+    }
+    
+    return appName;
+}
+
 -(IBAction)showPrefPanel:(id)sender {
     if (path) {
         [textField setStringValue:path];
     } else {
         [textField setStringValue:defaultPath];
     }
+    
+    if (version) {
+        [versionSelector selectItemWithTitle:version];
+    }
+    
     [prefPanel makeKeyAndOrderFront:nil];
 }
 
 -(IBAction)applyChange:(id)sender {
+    NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
     path = [textField stringValue];
+    version = [[versionSelector selectedItem] title];
     
     if (path) {
-        NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
         [d setObject:path forKey:@"path"];
+    }
+    
+    if (version) {
+        [d setObject:version forKey:@"version"];
     }
     
     [prefPanel orderOut:nil];
