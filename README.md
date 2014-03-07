@@ -1,39 +1,22 @@
-SublimeText 2 URLHandler on OS X
-=======================
-This application enables SublimeText 2 to open `subl:` urls, as Textmate has as described [here](http://manual.macromates.com/en/using_textmate_from_terminal#url_scheme_html)
+# SublimeText 3 URLHandler on OS X
 
-    subl://open/?url=file:///etc/passwd&line=10&column=2
+This application enables SublimeText 3 to open `subl:` urls, as Textmate has as described [here](http://manual.macromates.com/en/using_textmate_from_terminal#url_scheme_html): `subl://open/?url=file:///etc/passwd&line=10&column=2`
 
-Installation
-------------
-Download [latest release](http://asuth.com/SublHandler.app.zip).
+### Install
+- Clone this repo
+- Drag `SublHandler.app` into `Applications` folder and open it
+- Adjust Preferences (`Cmd + ,`) to point to your `subl` path
+- Open terminal and type: `open 'subl://open/?url=file:///etc/hosts'` to test
 
-Unzip it, then launch it. Select `SublHandler` -> `Preferences...`, then set the path for the subl binary.
-
-*Mountain Lion Users*: Because it's an unsigned binary, you'll need to right-click the app and select "Open"...You only need to run it once for the URL handler to register.
-
-Test it
--------
-Open terminal and type:
-    open 'subl://open/?url=file:///etc/hosts'
-
-
-Uninstalling
-------------
+### Uninstall
 Delete following:
+- `/Applications/SublHandler.app`
+- `~/Library/Preferences/com.asuth.sublhandler.plist`
 
-    /Applications/SublHandler.app
-    ~/Library/Preferences/com.asuth.sublhandler.plist
+### Authors
+- Daisuke Murase :@typester (github, twitter, CPAN, etc..)
+- Scott Wadden (SublimeText 3 port)
+- Andrew Sutherland (Mountain Lion fixes)
+- Cory Simmons (port to Sublime Text 3)
 
-Author
-------
-
-* Daisuke Murase :@typester (github, twitter, CPAN, etc..)
-* Scott Wadden (SublimeText 2 port)
-* Andrew Sutherland (Mountain Lion fixes)
-
-License
--------
-
-BSD.
-
+##### BSD License

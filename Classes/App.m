@@ -4,22 +4,22 @@
 
 @implementation App
 
-NSString *defaultPath = @"/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl";
+NSString *defaultPath = @"/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl";
 
 -(void)awakeFromNib {
     NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
     path = [d objectForKey:@"path"];
-    
+
     NSAppleEventManager *appleEventManager = [NSAppleEventManager sharedAppleEventManager];
     [appleEventManager setEventHandler:self andSelector:@selector(handleGetURLEvent:withReplyEvent:) forEventClass:kInternetEventClass andEventID:kAEGetURL];
 }
 
 -(void)handleGetURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent {
     if (nil == path) path = defaultPath;
-    
+
     // txmt://open/?url=file://~/.bash_profile&line=11&column=2
     NSURL *url = [NSURL URLWithString:[[event paramDescriptorForKeyword:keyDirectObject] stringValue]];
-    
+
     if (url && [[url host] isEqualToString:@"open"]) {
         NSDictionary *params = [url dictionaryByDecodingQueryString];
         NSString* url  = [params objectForKey:@"url"];
@@ -32,14 +32,14 @@ NSString *defaultPath = @"/Applications/Sublime Text 2.app/Contents/SharedSuppor
             } else {
                 arg = [NSString stringWithFormat:@"%@", file];
             }
-            
+
             NSTask *task = [[NSTask alloc] init];
             [task setLaunchPath:path];
             [task setArguments:[NSArray arrayWithObjects:arg, nil]];
             [task launch];
             [task release];
             NSWorkspace *sharedWorkspace = [NSWorkspace sharedWorkspace];
-            NSString *appPath = [sharedWorkspace fullPathForApplication:@"Sublime Text 2"];
+            NSString *appPath = [sharedWorkspace fullPathForApplication:@"Sublime Text"];
             NSString *identifier = [[NSBundle bundleWithPath:appPath] bundleIdentifier];
             NSArray *selectedApps =
             [NSRunningApplication runningApplicationsWithBundleIdentifier:identifier];
@@ -48,7 +48,7 @@ NSString *defaultPath = @"/Applications/Sublime Text 2.app/Contents/SharedSuppor
             [runningApplcation setCollectionBehavior: NSWindowCollectionBehaviorMoveToActiveSpace];
         }
     }
-    
+
     //    if (![prefPanel isVisible]) {
     //        [NSApp terminate:self];
     //    }
@@ -65,12 +65,12 @@ NSString *defaultPath = @"/Applications/Sublime Text 2.app/Contents/SharedSuppor
 
 -(IBAction)applyChange:(id)sender {
     path = [textField stringValue];
-    
+
     if (path) {
         NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
         [d setObject:path forKey:@"path"];
     }
-    
+
     [prefPanel orderOut:nil];
 }
 
