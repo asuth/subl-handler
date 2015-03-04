@@ -23,7 +23,7 @@ Uninstalling
 Delete following:
 
     /Applications/SublHandler.app
-    ~/Library/Preferences/com.asuth.sublhandler.plist
+    ~/Library/Preferences/org.asuth.sublhandler.plist
 
 Author
 ------
